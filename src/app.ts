@@ -25,7 +25,10 @@ app.use('/cards', cardRouter);
 
 mongoose
   .connect(BaseURL)
-  .then(() => console.log('Подключение к базе произошло успешно'))
+  .then(() => (
+    // eslint-disable-next-line no-console
+    console.log('Подключение к базе произошло успешно')
+  ))
   .catch((err) => {
     // eslint-disable-next-line no-console
     console.log(`Произошла ошибка при подключении к базе: ${err}`);

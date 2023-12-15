@@ -20,4 +20,3 @@ export interface ICard {
   likes: ObjectId[];
   createdAt: Date;
 }
-

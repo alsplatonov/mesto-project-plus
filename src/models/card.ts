@@ -1,4 +1,4 @@
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 import { ICard } from '../utils/interfaces';
 
 const cardSchema = new mongoose.Schema<ICard>({

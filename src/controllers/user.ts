@@ -1,19 +1,23 @@
 import { Request, Response } from 'express';
-import { CustomRequest } from 'utils/interfaces';
+import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
 import {
-  STATUS_SUCCESS, SUCCES_MESSAGE, STATUS_SERVER_ERROR,
-  SERVER_ERROR_MESSAGE, STATUS_NOT_FOUND, USER_NOT_FOUND_MESSAGE, CREATE_SUCCES_MESSAGE,
-  STATUS_CREATED, STATUS_BAD_REQUEST, INVALID_DATA_MESSAGE
+  STATUS_SUCCESS,
+  STATUS_SERVER_ERROR,
+  SERVER_ERROR_MESSAGE,
+  STATUS_NOT_FOUND,
+  USER_NOT_FOUND_MESSAGE,
+  STATUS_CREATED,
+  STATUS_BAD_REQUEST,
+  INVALID_DATA_MESSAGE,
 } from '../utils/consts';
-
 
 export const getAllUsers = (req: Request, res: Response) => {
   User.find({})
     .then((users) => {
       res.status(STATUS_SUCCESS).send({ data: users });
     })
-    .catch((err) => {
+    .catch(() => {
       res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
     });
 };
@@ -32,7 +36,7 @@ export const getUserById = (req: Request, res: Response) => {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
-}
+};
 
 export const createUser = (req: Request, res: Response) => {
   const { name, about, avatar } = req.body;
@@ -68,10 +72,10 @@ export const updateUser = (req: CustomRequest, res: Response) => {
 };
 
 export const updateUserAvatar = (req: CustomRequest, res: Response) => {
-  const {avatar} = req.body;
+  const { avatar } = req.body;
   const userId = req.user?._id;
 
-  User.findByIdAndUpdate(userId, { avatar } )
+  User.findByIdAndUpdate(userId, { avatar })
     .then((user) => {
       res.status(STATUS_SUCCESS).send({ data: user });
     })
@@ -83,4 +87,3 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
       }
     });
 };
-
