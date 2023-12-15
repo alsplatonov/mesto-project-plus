@@ -1,12 +1,5 @@
-import mongoose, {Types} from 'mongoose';
-
-export interface ICard {
-  name: string;
-  link: string;
-  owner: Types.ObjectId;
-  likes: Types.ObjectId[];
-  createdAt: Date;
-}
+import mongoose, { Types } from 'mongoose';
+import { ICard } from '../utils/interfaces';
 
 const cardSchema = new mongoose.Schema<ICard>({
   name: {

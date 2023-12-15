@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import userRouter from './routes/user';
 import express, { Request, Response, NextFunction } from 'express';
+import { CustomRequest } from 'utils/interfaces';
 
+// import cardRouter from 'routes/card';
 
 const { PORT = 3000 } = process.env;
 const BaseURL = 'mongodb://localhost:27017/mestodb';
@@ -10,11 +13,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-interface CustomRequest extends Request {
-  user?: {
-    _id: string;
-  };
-}
 
 
 app.use((req: CustomRequest, res: Response, next: NextFunction) => {
@@ -25,6 +23,8 @@ app.use((req: CustomRequest, res: Response, next: NextFunction) => {
   next();
 });
 
+app.use('/users', userRouter);
+// app.use('/cards', cardRouter);
 
 mongoose
   .connect(BaseURL)
