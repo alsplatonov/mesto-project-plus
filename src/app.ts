@@ -9,7 +9,8 @@ const BaseURL = 'mongodb://localhost:27017/mestodb';
 
 const app = express();
 
-var helmet = require('helmet');
+const helmet = require('helmet');
+
 app.use(helmet());
 
 app.use(express.json());

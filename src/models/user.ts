@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { IUser } from '../utils/interfaces';
 import validator from 'validator';
+import { IUser } from '../utils/interfaces';
 
 const userSchema = new mongoose.Schema<IUser>({
   name: {

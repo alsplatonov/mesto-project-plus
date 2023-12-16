@@ -73,8 +73,7 @@ export const updateUser = (req: CustomRequest, res: Response) => {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
@@ -96,8 +95,7 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });

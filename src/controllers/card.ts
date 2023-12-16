@@ -4,7 +4,6 @@ import {
   STATUS_SERVER_ERROR,
   SERVER_ERROR_MESSAGE,
   STATUS_NOT_FOUND,
-  USER_NOT_FOUND_MESSAGE,
   STATUS_CREATED,
   STATUS_BAD_REQUEST,
   INVALID_DATA_MESSAGE,
@@ -37,8 +36,7 @@ export const createCard = (req: CustomRequest, res: Response) => {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
@@ -57,8 +55,7 @@ export const deleteCardById = (req: Request, res: Response) => {
         res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
@@ -82,8 +79,7 @@ export const likeCard = (req: CustomRequest, res: Response) => {
         res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
@@ -107,10 +103,8 @@ export const dislikeCard = (req: CustomRequest, res: Response) => {
         res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
       } else if (err.name === 'CastError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      }
-      else {
+      } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
 };
-

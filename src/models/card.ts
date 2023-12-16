@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { ICard } from '../utils/interfaces';
 import validator from 'validator';
+import { ICard } from '../utils/interfaces';
 
 const cardSchema = new mongoose.Schema<ICard>({
   name: {
