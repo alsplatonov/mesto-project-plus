@@ -26,12 +26,15 @@ export const getUserById = (req: Request, res: Response) => {
   const { userId } = req.params;
 
   User.findById(userId)
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
       res.status(STATUS_SUCCESS).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
@@ -58,14 +61,20 @@ export const updateUser = (req: CustomRequest, res: Response) => {
   const { name, about } = req.body;
   const userId = req.user?._id;
 
-  User.findByIdAndUpdate(userId, { name, about })
+  User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
       res.status(STATUS_SUCCESS).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
-      } else {
+      } else if (err.name === 'ValidationError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      }
+      else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
@@ -75,14 +84,20 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
   const { avatar } = req.body;
   const userId = req.user?._id;
 
-  User.findByIdAndUpdate(userId, { avatar })
+  User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
       res.status(STATUS_SUCCESS).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
-      } else {
+      } else if (err.name === 'ValidationError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      }
+      else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
     });
