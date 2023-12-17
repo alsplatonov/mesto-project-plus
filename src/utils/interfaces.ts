@@ -12,6 +12,8 @@ export interface IUser {
   name: string;
   about: string;
   avatar: string;
+  email: string,
+  password: string,
 }
 
 export interface ICard {
@@ -20,4 +22,8 @@ export interface ICard {
   owner: ObjectId;
   likes: ObjectId[];
   createdAt: Date;
+}
+
+export interface ICUstomError extends Error { // расширим класс Error свойством statusCode
+  statusCode: number
 }
