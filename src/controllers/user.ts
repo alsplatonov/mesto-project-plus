@@ -1,4 +1,6 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
 import {
@@ -42,20 +44,36 @@ export const getUserById = (req: Request, res: Response) => {
 };
 
 export const createUser = (req: Request, res: Response) => {
-  const { name, about, avatar } = req.body;
+  const { name, about, avatar, email, password } = req.body;
 
-  User.create({ name, about, avatar })
-    .then((user) => {
-      res.status(STATUS_CREATED).send({ data: user });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      } else {
-        res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
-      }
+  bcrypt.hash(password, 10) // хэшифруем пароль, добавив "соль"
+    .then((hash: string) => {
+      User.create({
+        name,
+        about,
+        avatar,
+        email,
+        password: hash,
+      })
+        .then((user) => {
+          res.status(STATUS_CREATED).send({ // не возвращаем пароль
+            _id: user._id,
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+          });
+        })
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+          } else {
+            res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+          }
+        });
     });
 };
+
 
 export const updateUser = (req: CustomRequest, res: Response) => {
   const { name, about } = req.body;
@@ -100,3 +118,25 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
       }
     });
 };
+
+const loginUser = (req: CustomRequest, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+  const { NODE_ENV, JWT_SECRET } = process.env;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      if (!JWT_SECRET) {
+        throw new Error('JWT_SECRET не найден');
+      }
+      const token = jwt.sign(
+        { _id: user._id },
+        JWT_SECRET as string,
+        { expiresIn: '7d' }, // токен на 7 дней
+      );
+
+      res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 3600000 * 24 * 7), sameSite: true });
+      res.send({ user, token });
+    })
+    .catch(next);
+};
+

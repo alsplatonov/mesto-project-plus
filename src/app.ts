@@ -4,6 +4,8 @@ import { CustomRequest } from './utils/interfaces';
 import userRouter from './routes/user';
 import cardRouter from './routes/card';
 
+require('dotenv').config();
+
 const { PORT = 3000 } = process.env;
 const BaseURL = 'mongodb://localhost:27017/mestodb';
 
