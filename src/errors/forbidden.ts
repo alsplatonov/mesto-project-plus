@@ -1,4 +1,5 @@
-import { STATUS_FORBIDDEN_ERROR } from "../utils/consts";
+/* eslint-disable linebreak-style */
+import { STATUS_FORBIDDEN_ERROR } from '../utils/consts';
 import { ICUstomError } from '../utils/interfaces';
 
 class ForbiddenError extends Error implements ICUstomError {
@@ -9,7 +10,5 @@ class ForbiddenError extends Error implements ICUstomError {
     this.statusCode = STATUS_FORBIDDEN_ERROR;
   }
 }
-
-module.exports = ForbiddenError;
 
 export default ForbiddenError;

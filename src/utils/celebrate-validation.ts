@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { celebrate } from 'celebrate';
 import Joi from 'joi';
 
@@ -38,12 +39,10 @@ const createCardValidation = celebrate({
   }),
 });
 
-export  {
+export {
   createUserValidation,
   updateUserValidation,
   updateAvatarValidation,
   loginUserValidation,
   createCardValidation,
 };
-
-

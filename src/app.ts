@@ -1,7 +1,7 @@
+/* eslint-disable linebreak-style */
 import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import { errors } from 'celebrate';
-import { CustomRequest } from './utils/interfaces';
 import userRouter from './routes/user';
 import cardRouter from './routes/card';
 import authMiddleware from './middlewares/auth';

@@ -1,4 +1,5 @@
-import { STATUS_UNAUTHORIZED } from "../utils/consts";
+/* eslint-disable linebreak-style */
+import { STATUS_UNAUTHORIZED } from '../utils/consts';
 import { ICUstomError } from '../utils/interfaces';
 
 class UnauthorizedError extends Error implements ICUstomError {
@@ -9,7 +10,5 @@ class UnauthorizedError extends Error implements ICUstomError {
     this.statusCode = STATUS_UNAUTHORIZED;
   }
 }
-
-module.exports = UnauthorizedError;
 
 export default UnauthorizedError;

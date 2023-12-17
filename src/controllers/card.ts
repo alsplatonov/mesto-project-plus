@@ -1,10 +1,11 @@
+/* eslint-disable linebreak-style */
 import { Request, Response, NextFunction } from 'express';
 import {
   STATUS_SUCCESS,
   STATUS_CREATED,
   INVALID_DATA_MESSAGE,
   CARD_NOT_FOUND_MESSAGE,
-  CARD_FORBIDDEN_DELETE_MESSAGE
+  CARD_FORBIDDEN_DELETE_MESSAGE,
 } from '../utils/consts';
 import ForbiddenError from '../errors/forbidden';
 import BadRequestError from '../errors/badrequest';
@@ -49,10 +50,9 @@ export const deleteCardById = (req: CustomRequest, res: Response, next: NextFunc
         next(new ForbiddenError(CARD_FORBIDDEN_DELETE_MESSAGE));
       } else {
         card.remove()
-          .then(card => {
-            res.status(STATUS_SUCCESS).send({ data: card });
-          }
-          )
+          .then((removedCard) => {
+            res.status(STATUS_SUCCESS).send({ data: removedCard });
+          });
       }
     })
     .catch((err) => {

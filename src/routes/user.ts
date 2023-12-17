@@ -7,11 +7,11 @@ import {
   updateUserAvatar,
   getCurrUser,
 } from '../controllers/user';
+
 import {
   updateUserValidation,
   updateAvatarValidation,
-}
-from '../utils/celebrate-validation';
+} from '../utils/celebrate-validation';
 
 const userRouter = Router();
 

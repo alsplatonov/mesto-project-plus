@@ -8,7 +8,6 @@ export const STATUS_NOT_FOUND = 404;
 export const STATUS_ERROR_DUBLICATE = 409;
 export const STATUS_SERVER_ERROR = 500;
 
-
 export const SUCCES_MESSAGE = 'Запрос обработан';
 export const CREATE_SUCCES_MESSAGE = 'Объект создан';
 export const INVALID_DATA_MESSAGE = 'Некорректные данные';

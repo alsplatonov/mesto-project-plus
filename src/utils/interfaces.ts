@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import mongoose, { ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { Request } from 'express';
 
 export interface CustomRequest extends Request {
@@ -24,6 +24,6 @@ export interface ICard {
   createdAt: Date;
 }
 
-export interface ICUstomError extends Error { //расширим класс Error свойством statusCode
+export interface ICUstomError extends Error { // расширим класс Error свойством statusCode
   statusCode: number
 }

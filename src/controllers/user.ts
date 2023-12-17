@@ -1,20 +1,16 @@
+/* eslint-disable linebreak-style */
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
-import ForbiddenError from '../errors/forbidden';
 import BadRequestError from '../errors/badrequest';
 import NotFoundError from '../errors/notfound';
 import DublicateError from '../errors/dublicate';
 import {
   STATUS_SUCCESS,
-  STATUS_SERVER_ERROR,
-  SERVER_ERROR_MESSAGE,
-  STATUS_NOT_FOUND,
   USER_NOT_FOUND_MESSAGE,
   STATUS_CREATED,
-  STATUS_BAD_REQUEST,
   INVALID_DATA_MESSAGE,
   STATUS_ERROR_DUBLICATE,
   USER_DUBLICATE_MESSAGE,
@@ -47,7 +43,13 @@ export const getUserById = (req: Request, res: Response, next: NextFunction) => 
 };
 
 export const createUser = (req: Request, res: Response, next: NextFunction) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   bcrypt.hash(password, 10) // хэшифруем пароль, добавив "соль"
     .then((hash: string) => {
@@ -79,7 +81,6 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
         });
     });
 };
-
 
 export const updateUser = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { name, about } = req.body;
@@ -125,7 +126,7 @@ export const updateUserAvatar = (req: CustomRequest, res: Response, next: NextFu
 
 export const login = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
-  const { NODE_ENV, JWT_SECRET } = process.env;
+  const { JWT_SECRET } = process.env;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -137,7 +138,6 @@ export const login = (req: CustomRequest, res: Response, next: NextFunction) => 
         JWT_SECRET as string,
         { expiresIn: '7d' }, // токен на 7 дней
       );
-
       res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: true });
       res.send({ user, token });
     })
@@ -159,5 +159,3 @@ export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunctio
       next(err);
     });
 };
-
-

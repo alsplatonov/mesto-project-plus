@@ -1,7 +1,14 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
+/* eslint-disable max-len */
 import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import { IUser } from '../utils/interfaces';
+
+interface UserModel extends mongoose.Model<IUser> {
+  findUserByCredentials: (email: string, password: string) => Promise<mongoose.Document<unknown, any, IUser>>
+}
 
 const userSchema = new mongoose.Schema<IUser, UserModel>({
   name: {
@@ -20,15 +27,15 @@ const userSchema = new mongoose.Schema<IUser, UserModel>({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: (v: string) => /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&=]*)/.test(v),
+      validator:
+        (v: string) => /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&=]*)/.test(v),
       message: 'Некорректный URL',
     },
-
   },
   email: {
     type: String,
     required: true,
-    trim: true, //убрать пробелы
+    trim: true, // убрать пробелы
     unique: true,
     validate: {
       validator: (email: string) => validator.isEmail(email),
@@ -41,10 +48,6 @@ const userSchema = new mongoose.Schema<IUser, UserModel>({
     select: false,
   },
 });
-
-interface UserModel extends mongoose.Model<IUser> {
-  findUserByCredentials: (email: string, password: string) => Promise<mongoose.Document<unknown, any, IUser>>
-}
 
 userSchema.static('findUserByCredentials', function findUserByCredentials(email: string, password: string) {
   return this.findOne({ email }).select('+password')

@@ -1,6 +1,7 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable no-unused-vars */
 import { Response, NextFunction } from 'express';
-import { ObjectId } from 'mongoose';
-import jwt , { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import UnauthorizedError from '../errors/unauthorized';
 import { CustomRequest } from '../utils/interfaces';
 import { USER_NOT_AUTHORIZED, TOKEN_NOT_VALID } from '../utils/consts';
@@ -31,5 +32,3 @@ export default (req: CustomRequest, res: Response, next: NextFunction) => {
 
   next(); // пропускаем запрос дальше
 };
-
-

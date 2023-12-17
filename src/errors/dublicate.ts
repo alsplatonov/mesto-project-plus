@@ -1,4 +1,5 @@
-import { STATUS_ERROR_DUBLICATE } from "../utils/consts";
+/* eslint-disable linebreak-style */
+import { STATUS_ERROR_DUBLICATE } from '../utils/consts';
 import { ICUstomError } from '../utils/interfaces';
 
 class DublicateError extends Error implements ICUstomError {
@@ -9,7 +10,5 @@ class DublicateError extends Error implements ICUstomError {
     this.statusCode = STATUS_ERROR_DUBLICATE;
   }
 }
-
-module.exports = DublicateError;
 
 export default DublicateError;
