@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { ObjectId } from 'mongoose';
 import jwt , { JwtPayload } from 'jsonwebtoken';
-import UnauthorizedError from '../errors/unauthorized-err';
+import UnauthorizedError from '../errors/unauthorized';
 import { CustomRequest } from '../utils/interfaces';
 import { USER_NOT_AUTHORIZED, TOKEN_NOT_VALID } from '../utils/consts';
 

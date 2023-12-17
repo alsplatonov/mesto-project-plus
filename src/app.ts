@@ -25,14 +25,6 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use((req: CustomRequest, res: Response, next: NextFunction) => {
-  req.user = {
-    _id: '6579eea42d0f0df5d4b6dfac',
-  };
-
-  next();
-});
-
 app.use(requestLogger); // подключаем логер запросов
 
 app.post('/signup', createUserValidation, createUser);

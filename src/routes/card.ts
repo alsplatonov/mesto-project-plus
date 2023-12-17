@@ -9,8 +9,7 @@ import {
 } from '../controllers/card';
 import {
   createCardValidation,
-}
-  from '../utils/celebrate-validation';
+} from '../utils/celebrate-validation';
 
 const cardRouter = Router();
 

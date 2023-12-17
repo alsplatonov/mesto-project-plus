@@ -3,8 +3,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
-import NotFoundError from '../errors/not-found-err';
-
+import ForbiddenError from '../errors/forbidden';
+import BadRequestError from '../errors/badrequest';
+import NotFoundError from '../errors/notfound';
+import DublicateError from '../errors/dublicate';
 import {
   STATUS_SUCCESS,
   STATUS_SERVER_ERROR,
@@ -18,17 +20,15 @@ import {
   USER_DUBLICATE_MESSAGE,
 } from '../utils/consts';
 
-export const getAllUsers = (req: Request, res: Response) => {
+export const getAllUsers = (req: Request, res: Response, next: NextFunction) => {
   User.find({})
     .then((users) => {
       res.status(STATUS_SUCCESS).send({ data: users });
     })
-    .catch(() => {
-      res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
-    });
+    .catch(next);
 };
 
-export const getUserById = (req: Request, res: Response) => {
+export const getUserById = (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.params;
 
   User.findById(userId)
@@ -38,16 +38,15 @@ export const getUserById = (req: Request, res: Response) => {
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
+        next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
       } else if (err.name === 'CastError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      } else {
-        res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       }
+      next(err);
     });
 };
 
-export const createUser = (req: Request, res: Response) => {
+export const createUser = (req: Request, res: Response, next: NextFunction) => {
   const { name, about, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10) // хэшифруем пароль, добавив "соль"
@@ -70,19 +69,19 @@ export const createUser = (req: Request, res: Response) => {
         })
         .catch((err) => {
           if (err.code === 11000) {
-            res.status(STATUS_ERROR_DUBLICATE).send({ message:USER_DUBLICATE_MESSAGE });
+            next(new DublicateError(USER_DUBLICATE_MESSAGE));
+            res.status(STATUS_ERROR_DUBLICATE).send({ message: USER_DUBLICATE_MESSAGE });
           }
           if (err.name === 'ValidationError') {
-            res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-          } else {
-            res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+            next(new BadRequestError(INVALID_DATA_MESSAGE));
           }
+          next(err);
         });
     });
 };
 
 
-export const updateUser = (req: CustomRequest, res: Response) => {
+export const updateUser = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { name, about } = req.body;
   const userId = req.user?._id;
 
@@ -93,18 +92,17 @@ export const updateUser = (req: CustomRequest, res: Response) => {
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
+        next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
       } else if (err.name === 'ValidationError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       } else if (err.name === 'CastError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      } else {
-        res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       }
+      next(err);
     });
 };
 
-export const updateUserAvatar = (req: CustomRequest, res: Response) => {
+export const updateUserAvatar = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { avatar } = req.body;
   const userId = req.user?._id;
 
@@ -115,14 +113,13 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
+        next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
       } else if (err.name === 'ValidationError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       } else if (err.name === 'CastError') {
-        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
-      } else {
-        res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       }
+      next(err);
     });
 };
 
@@ -155,11 +152,12 @@ export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunctio
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
-      } else if (err.name === 'CastError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+      } else if (err.name === 'CastError') {
+        next(new BadRequestError(INVALID_DATA_MESSAGE));
       }
       next(err);
     });
 };
+
 
