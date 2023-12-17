@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema<IUser, UserModel>({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: (v: string) => validator.isURL(v),
+      validator: (v: string) => /^(https?:\/\/)?(www\.)?([a-zA-Z0-9-._~:/?#[]@!$&'()*+,;=]+\.){1,}[a-zA-Z]{2,}(\/[a-zA-Z0-9-._~:/?#[]@!$&'()*+,;=]*)?$/.test(v),
       message: 'Некорректный URL',
     },
   },

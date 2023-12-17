@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
-import NotFoundError from 'errors/not-found-err';
+import NotFoundError from '../errors/not-found-err';
 
 import {
   STATUS_SUCCESS,
@@ -14,6 +14,8 @@ import {
   STATUS_CREATED,
   STATUS_BAD_REQUEST,
   INVALID_DATA_MESSAGE,
+  STATUS_ERROR_DUBLICATE,
+  USER_DUBLICATE_MESSAGE,
 } from '../utils/consts';
 
 export const getAllUsers = (req: Request, res: Response) => {
@@ -67,6 +69,9 @@ export const createUser = (req: Request, res: Response) => {
           });
         })
         .catch((err) => {
+          if (err.code === 11000) {
+            res.status(STATUS_ERROR_DUBLICATE).send({ message:USER_DUBLICATE_MESSAGE });
+          }
           if (err.name === 'ValidationError') {
             res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
           } else {
