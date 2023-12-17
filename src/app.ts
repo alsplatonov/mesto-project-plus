@@ -26,6 +26,9 @@ app.use((req: CustomRequest, res: Response, next: NextFunction) => {
   next();
 });
 
+app.post('/signin', login);
+app.post('/signup', createUser);
+
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 

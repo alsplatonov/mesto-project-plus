@@ -6,11 +6,13 @@ import {
   createUser,
   updateUser,
   updateUserAvatar,
+  getCurrUser,
 } from '../controllers/user';
 
 const userRouter = Router();
 
 userRouter.get('/', getAllUsers);
+userRouter.get('/me', getCurrUser);
 userRouter.get('/:userId', getUserById);
 userRouter.post('/', createUser);
 userRouter.patch('/me', updateUser);

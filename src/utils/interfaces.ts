@@ -23,3 +23,7 @@ export interface ICard {
   likes: ObjectId[];
   createdAt: Date;
 }
+
+export interface ICUstomError extends Error { //расширим класс Error свойством statusCode
+  statusCode: number
+}

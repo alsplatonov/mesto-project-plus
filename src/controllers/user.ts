@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { CustomRequest } from '../utils/interfaces';
 import User from '../models/user';
+import NotFoundError from 'errors/not-found-err';
+
 import {
   STATUS_SUCCESS,
   STATUS_SERVER_ERROR,
@@ -119,7 +121,7 @@ export const updateUserAvatar = (req: CustomRequest, res: Response) => {
     });
 };
 
-const loginUser = (req: CustomRequest, res: Response, next: NextFunction) => {
+export const login = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
   const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -134,9 +136,23 @@ const loginUser = (req: CustomRequest, res: Response, next: NextFunction) => {
         { expiresIn: '7d' }, // токен на 7 дней
       );
 
-      res.cookie('jwt', token, { httpOnly: true, expires: new Date(Date.now() + 3600000 * 24 * 7), sameSite: true });
+      res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: true });
       res.send({ user, token });
     })
     .catch(next);
+};
+
+export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunction) => {
+  User.findById(req.user?._id)
+    .orFail(new NotFoundError('Пользователь не найден'))
+    .then((user) => {
+      res.status(STATUS_SUCCESS).send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new NotFoundError('Пользователь по указанному ID не найден'));
+      }
+      next(err);
+    });
 };
 
