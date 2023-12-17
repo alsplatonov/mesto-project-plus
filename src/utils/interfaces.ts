@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import { ObjectId } from 'mongoose';
 import { Request } from 'express';
 

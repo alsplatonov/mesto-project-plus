@@ -4,7 +4,6 @@ import {
   STATUS_SERVER_ERROR,
   SERVER_ERROR_MESSAGE,
   STATUS_NOT_FOUND,
-  USER_NOT_FOUND_MESSAGE,
   STATUS_CREATED,
   STATUS_BAD_REQUEST,
   INVALID_DATA_MESSAGE,
@@ -35,6 +34,8 @@ export const createCard = (req: CustomRequest, res: Response) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
@@ -45,12 +46,15 @@ export const deleteCardById = (req: Request, res: Response) => {
   const { cardId } = req.params;
 
   Card.findByIdAndDelete(cardId)
+    .orFail(new Error('NotFoundError'))
     .then((card) => {
-      res.status(STATUS_CREATED).send({ data: card });
+      res.status(STATUS_SUCCESS).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
@@ -66,12 +70,15 @@ export const likeCard = (req: CustomRequest, res: Response) => {
     { $addToSet: { likes: userId } },
     { new: true },
   )
+    .orFail(new Error('NotFoundError'))
     .then((card) => {
-      res.status(STATUS_CREATED).send({ data: card });
+      res.status(STATUS_SUCCESS).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
       } else {
         res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
       }
@@ -82,23 +89,22 @@ export const dislikeCard = (req: CustomRequest, res: Response) => {
   const { cardId } = req.params;
   const userId = req.user?._id;
 
-  if (userId) {
-    Card.findByIdAndUpdate(
-      cardId,
-      { $pull: { likes: userId as any } },
-      { new: true },
-    )
-      .then((card) => {
-        res.status(STATUS_CREATED).send({ data: card });
-      })
-      .catch((err) => {
-        if (err.name === 'NotFoundError') {
-          res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
-        } else {
-          res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
-        }
-      });
-  } else {
-    res.status(STATUS_BAD_REQUEST).send({ message: USER_NOT_FOUND_MESSAGE });
-  }
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: userId as any } },
+    { new: true },
+  )
+    .orFail(new Error('NotFoundError'))
+    .then((card) => {
+      res.status(STATUS_SUCCESS).send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'NotFoundError') {
+        res.status(STATUS_NOT_FOUND).send({ message: CARD_NOT_FOUND_MESSAGE });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_BAD_REQUEST).send({ message: INVALID_DATA_MESSAGE });
+      } else {
+        res.status(STATUS_SERVER_ERROR).send({ message: SERVER_ERROR_MESSAGE });
+      }
+    });
 };
