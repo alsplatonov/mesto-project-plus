@@ -144,13 +144,15 @@ export const login = (req: CustomRequest, res: Response, next: NextFunction) => 
 
 export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunction) => {
   User.findById(req.user?._id)
-    .orFail(new NotFoundError('Пользователь не найден'))
+    .orFail(new Error('NotFoundError'))
     .then((user) => {
       res.status(STATUS_SUCCESS).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new NotFoundError('Пользователь по указанному ID не найден'));
+      if (err.name === 'NotFoundError') {
+        res.status(STATUS_NOT_FOUND).send({ message: USER_NOT_FOUND_MESSAGE });
+      } else if (err.name === 'CastError') {
+        next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
       }
       next(err);
     });

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { CustomRequest } from './utils/interfaces';
 import userRouter from './routes/user';
 import cardRouter from './routes/card';
+import authMiddleware from './middlewares/auth';
 
 require('dotenv').config();
 
@@ -28,6 +29,8 @@ app.use((req: CustomRequest, res: Response, next: NextFunction) => {
 
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(authMiddleware);
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
