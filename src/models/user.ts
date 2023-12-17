@@ -23,6 +23,20 @@ const userSchema = new mongoose.Schema<IUser>({
       message: 'Некорректный URL',
     },
   },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+    validate: {
+      validator: (email: string) => validator.isEmail(email),
+      message: 'Неправильный формат почты',
+    },
+  },
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
 export default mongoose.model<IUser>('user', userSchema);
