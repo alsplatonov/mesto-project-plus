@@ -9,6 +9,7 @@ import {
 } from '../controllers/user';
 
 import {
+  userIdValidation,
   updateUserValidation,
   updateAvatarValidation,
 } from '../utils/celebrate-validation';
@@ -17,7 +18,7 @@ const userRouter = Router();
 
 userRouter.get('/', getAllUsers);
 userRouter.get('/me', getCurrUser);
-userRouter.get('/:userId', getUserById);
+userRouter.get('/:userId', userIdValidation, getUserById);
 userRouter.patch('/me', updateUserValidation, updateUser);
 userRouter.patch('/me/avatar', updateAvatarValidation, updateUserAvatar);
 

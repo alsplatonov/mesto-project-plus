@@ -4,12 +4,13 @@ import mongoose from 'mongoose';
 import { errors } from 'celebrate';
 import userRouter from './routes/user';
 import cardRouter from './routes/card';
+import notFoundRouter from './routes/not-found';
 import authMiddleware from './middlewares/auth';
 import { createUser, login } from './controllers/user';
 import { createUserValidation } from './utils/celebrate-validation';
 import { requestLogger, errorLogger } from './middlewares/logger';
-import { ICUstomError } from './utils/interfaces';
-import { STATUS_SERVER_ERROR } from './utils/consts';
+import limiter from './utils/limiter';
+import defaultErrorsMiddleware from './middlewares/default-errors';
 
 require('dotenv').config();
 
@@ -26,27 +27,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger); // подключаем логер запросов
+app.use(limiter);
 
 app.post('/signup', createUserValidation, createUser);
 app.post('/signin', login);
 
-app.use(authMiddleware);
+// app.use(authMiddleware);
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
+app.use('*', notFoundRouter);
 
 app.use(errorLogger); // подключаем логер ошибок
-
 app.use(errors()); // обработчик ошибок celebrate
-// централизованный обработчик ошибок
-app.use((err: ICUstomError, req: Request, res: Response, next: NextFunction) => {
-  const { statusCode = STATUS_SERVER_ERROR, message } = err;
-
-  res.status(statusCode).send({
-    message: statusCode === STATUS_SERVER_ERROR ? 'Ошибка сервера' : message,
-  });
-  next();
-});
+app.use(defaultErrorsMiddleware); // централизованный обработчик ошибок
 
 mongoose
   .connect(BaseURL)
