@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+// eslint-disable-next-line no-else-return
 import { Request, Response, NextFunction } from 'express';
 import {
   STATUS_SUCCESS,
@@ -32,9 +33,11 @@ export const createCard = (req: CustomRequest, res: Response, next: NextFunction
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -60,9 +63,11 @@ export const deleteCardById = (req: CustomRequest, res: Response, next: NextFunc
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -85,9 +90,11 @@ export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) 
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -110,9 +117,11 @@ export const dislikeCard = (req: CustomRequest, res: Response, next: NextFunctio
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
