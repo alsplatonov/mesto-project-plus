@@ -32,8 +32,10 @@ export const createCard = (req: CustomRequest, res: Response, next: NextFunction
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -46,7 +48,7 @@ export const deleteCardById = (req: CustomRequest, res: Response, next: NextFunc
   Card.findById(cardId)
     .orFail(new Error('NotFoundError'))
     .then((card) => {
-      if (card?.owner as any !== userId) {
+      if (card?.owner.toString() !== userId) {
         next(new ForbiddenError(CARD_FORBIDDEN_DELETE_MESSAGE));
       } else {
         card.remove()
@@ -58,8 +60,10 @@ export const deleteCardById = (req: CustomRequest, res: Response, next: NextFunc
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -81,8 +85,10 @@ export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) 
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -104,8 +110,10 @@ export const dislikeCard = (req: CustomRequest, res: Response, next: NextFunctio
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(CARD_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });

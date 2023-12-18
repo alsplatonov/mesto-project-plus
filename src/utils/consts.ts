@@ -19,3 +19,4 @@ export const CARD_DELETE_MESSAGE = 'Карточка удалена';
 export const TOKEN_NOT_VALID = 'Токен не действителен';
 export const USER_DUBLICATE_MESSAGE = 'Пользователь с таким email уже существует в системе';
 export const CARD_FORBIDDEN_DELETE_MESSAGE = 'У вас нет прав для удаления чужой карточки';
+export const PAGE_NOT_FOUND = 'Запрашиваемый ресурс не найден';

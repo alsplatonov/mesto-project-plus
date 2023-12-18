@@ -12,7 +12,6 @@ import {
   USER_NOT_FOUND_MESSAGE,
   STATUS_CREATED,
   INVALID_DATA_MESSAGE,
-  STATUS_ERROR_DUBLICATE,
   USER_DUBLICATE_MESSAGE,
 } from '../utils/consts';
 
@@ -35,8 +34,10 @@ export const getUserById = (req: Request, res: Response, next: NextFunction) => 
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -72,10 +73,11 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
         .catch((err) => {
           if (err.code === 11000) {
             next(new DublicateError(USER_DUBLICATE_MESSAGE));
-            res.status(STATUS_ERROR_DUBLICATE).send({ message: USER_DUBLICATE_MESSAGE });
+            return;
           }
           if (err.name === 'ValidationError') {
             next(new BadRequestError(INVALID_DATA_MESSAGE));
+            return;
           }
           next(err);
         });
@@ -94,10 +96,13 @@ export const updateUser = (req: CustomRequest, res: Response, next: NextFunction
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -115,10 +120,13 @@ export const updateUserAvatar = (req: CustomRequest, res: Response, next: NextFu
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });
@@ -139,7 +147,7 @@ export const login = (req: CustomRequest, res: Response, next: NextFunction) => 
         { expiresIn: '7d' }, // токен на 7 дней
       );
       res.cookie('jwt', token, { httpOnly: true, maxAge: 3600000, sameSite: true });
-      res.send({ user, token });
+      res.send({ token });
     })
     .catch(next);
 };
@@ -153,8 +161,10 @@ export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunctio
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+        return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+        return;
       }
       next(err);
     });

@@ -2,6 +2,18 @@
 import { celebrate } from 'celebrate';
 import Joi from 'joi';
 
+const userIdValidation = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().required().length(24).hex(),
+  }),
+});
+
+const cardIdValidation = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().required().length(24).hex(),
+  }),
+});
+
 const createUserValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -40,6 +52,8 @@ const createCardValidation = celebrate({
 });
 
 export {
+  userIdValidation,
+  cardIdValidation,
   createUserValidation,
   updateUserValidation,
   updateAvatarValidation,
