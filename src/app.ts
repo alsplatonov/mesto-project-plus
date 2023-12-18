@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import mongoose from 'mongoose';
 import { errors } from 'celebrate';
 import userRouter from './routes/user';
@@ -32,7 +32,7 @@ app.use(limiter);
 app.post('/signup', createUserValidation, createUser);
 app.post('/signin', login);
 
-// app.use(authMiddleware);
+app.use(authMiddleware);
 
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);

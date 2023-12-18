@@ -1,4 +1,5 @@
 /* eslint-disable linebreak-style */
+// eslint-disable-next-line no-else-return
 import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -34,9 +35,11 @@ export const getUserById = (req: Request, res: Response, next: NextFunction) => 
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -73,10 +76,12 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
         .catch((err) => {
           if (err.code === 11000) {
             next(new DublicateError(USER_DUBLICATE_MESSAGE));
+             // eslint-disable-next-line no-else-return
             return;
           }
           if (err.name === 'ValidationError') {
             next(new BadRequestError(INVALID_DATA_MESSAGE));
+             // eslint-disable-next-line no-else-return
             return;
           }
           next(err);
@@ -96,12 +101,15 @@ export const updateUser = (req: CustomRequest, res: Response, next: NextFunction
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -120,12 +128,15 @@ export const updateUserAvatar = (req: CustomRequest, res: Response, next: NextFu
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'ValidationError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
@@ -161,9 +172,11 @@ export const getCurrUser = (req: CustomRequest, res: Response, next: NextFunctio
     .catch((err) => {
       if (err.name === 'NotFoundError') {
         next(new NotFoundError(USER_NOT_FOUND_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       } else if (err.name === 'CastError') {
         next(new BadRequestError(INVALID_DATA_MESSAGE));
+         // eslint-disable-next-line no-else-return
         return;
       }
       next(err);
